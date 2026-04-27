@@ -31,7 +31,7 @@ The Hypersonic CFD Solver is a high-performance, GPU-accelerated Computational F
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/yourusername/hypersonic-cfd-solver.git](https://github.com/yourusername/hypersonic-cfd-solver.git)
+   git clone https://github.com/mtepenner/hypersonic-cfd-solver.git
    cd hypersonic-cfd-solver
    ```
 
