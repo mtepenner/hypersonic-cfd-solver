@@ -1,0 +1,47 @@
+hypersonic-cfd-solver/
+│
+├── .github/                             # CI/CD for GPU kernels and math verification
+│   └── workflows/
+│       ├── test-solvers.yml             # Validates fluid conservation laws
+│       └── build-gpu-kernels.yml
+│
+├── compute_kernel/                      # C++/CUDA: The Parallel Physics Engine
+│   ├── src/
+│   │   ├── main.cpp                     # Host code: Memory allocation and GPU orchestration
+│   │   ├── kernels/
+│   │   │   ├── euler_solver.cu          # CUDA kernel for compressible Euler equations
+│   │   │   ├── flux_splitting.cu        # Riemann solver for shock-capturing (e.g., Roe or HLLC)
+│   │   │   └── boundary_conditions.cu   # Handles wall reflections and supersonic inlets
+│   ├── include/
+│   │   └── cuda_helper.h                # Error handling and grid/block dim helpers
+│   └── CMakeLists.txt
+│
+├── simulation_api/                      # Python + FastAPI: The Mesh & Data Bridge
+│   ├── app/
+│   │   ├── mesh/
+│   │   │   └── generator.py             # Generates the 2D/3D grid around the nosecone geometry
+│   │   ├── core/
+│   │   │   └── cuda_interface.py        # Uses PyCUDA or CuPy to launch C++ kernels
+│   │   └── main.py                      # Streams results to the frontend via WebSockets
+│   ├── requirements.txt
+│   └── Dockerfile                       # NVIDIA-Docker image with CUDA drivers
+│
+├── cfd_visualizer/                      # React + TypeScript: The Thermal Heatmap
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── SimulationCanvas.tsx     # WebGL/Three.js fragment shader for 60FPS heatmap rendering
+│   │   │   ├── ParameterControls.tsx    # Sliders for Mach Number and Angle of Attack
+│   │   │   └── ProbeData.tsx            # Real-time point inspection for Pressure/Temp
+│   │   ├── shaders/
+│   │   │   └── heatmap.frag             # GLSL shader to map scalar fields to colors
+│   │   ├── App.tsx
+│   │   └── index.tsx
+│   ├── package.json
+│   └── Dockerfile
+│
+├── docker-compose.yml                   # Boots the GPU-enabled API and Visualizer
+├── Makefile                             # Compiles .cu files to PTX or binaries
+└── README.md
+
+
+
