@@ -1,0 +1,42 @@
+name: test-solvers
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  simulation-api-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install API dependencies
+        working-directory: simulation_api
+        run: pip install -r requirements.txt
+      - name: Run conservation checks
+        working-directory: simulation_api
+        env:
+          PYTHONPATH: ${{ github.workspace }}/simulation_api
+        run: python -m unittest discover -s tests -p 'test_*.py'
+      - name: Import FastAPI app
+        working-directory: simulation_api
+        env:
+          PYTHONPATH: ${{ github.workspace }}/simulation_api
+        run: python -c "from app.main import app; print(app.title)"
+
+  visualizer-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install frontend dependencies
+        working-directory: cfd_visualizer
+        run: npm install
+      - name: Build visualizer
+        working-directory: cfd_visualizer
+        run: npm run build

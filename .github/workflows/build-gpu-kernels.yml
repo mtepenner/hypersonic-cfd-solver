@@ -1,0 +1,24 @@
+name: build-gpu-kernels
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  build-kernel-host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure compute kernel
+        run: cmake -S compute_kernel -B build/compute_kernel
+      - name: Build compute kernel
+        run: cmake --build build/compute_kernel
+
+  build-containers:
+    runs-on: ubuntu-latest
+    needs: build-kernel-host
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build stack images
+        run: docker compose build

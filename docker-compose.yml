@@ -1,0 +1,24 @@
+services:
+  simulation_api:
+    build:
+      context: ./simulation_api
+    ports:
+      - "8000:8000"
+    environment:
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+
+  cfd_visualizer:
+    build:
+      context: ./cfd_visualizer
+      args:
+        VITE_SIM_API_URL: http://localhost:8000
+    depends_on:
+      - simulation_api
+    ports:
+      - "3000:80"
