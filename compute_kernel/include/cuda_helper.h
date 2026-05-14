@@ -10,11 +10,11 @@
 
 namespace cfd {
 
-inline int block_size_1d(int cells) {
+constexpr int block_size_1d(int cells) {
     return cells >= 512 ? 256 : 128;
 }
 
-inline int grid_size_1d(int cells, int block) {
+constexpr int grid_size_1d(int cells, int block) {
     return (cells + block - 1) / block;
 }
 
